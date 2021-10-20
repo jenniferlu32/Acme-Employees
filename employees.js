@@ -51,7 +51,7 @@ const findManagementChainForEmployee = (employeeObj, employees, managerObj=[]) =
   };
   const result = managerObj.slice().reverse();
   return result;
-}
+};
 
 //console.log(findManagementChainForEmployee(findEmployeeByName('moe', employees), employees));
 //console.log(findManagementChainForEmployee(findEmployeeByName('shep Jr.', employees), employees));
@@ -60,6 +60,36 @@ const findManagementChainForEmployee = (employeeObj, employees, managerObj=[]) =
   { id: 2, name: 'larry', managerId: 1 },
   { id: 4, name: 'shep', managerId: 2 }]
 */
+
+
+const idToIndex = employees.reduce((acc, el, i) => {
+  acc[el.id] = i;
+  return acc
+}, {});
+
+console.log(idToIndex)
+
+
+let root;
+
+const generateManagementTree = (employees) => {
+  employees.forEach((employee) => {
+    //identify root element
+    if (!employee.managerId) {
+      root = employee;
+      return;
+    };
+
+    //locate root in data
+    const managerEl = employees[idToIndex[employee.managerId]];
+
+    //add current employee
+    managerEl['reports'] = [...(managerEl['reports'] || []), employee]
+
+  });
+
+  return root;
+};
 
 
 //given a list of employees, generate a tree like structure for the employees, starting with the employee who has no manager. Each employee will have a reports property which is an array of the employees who report directly to them.
